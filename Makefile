@@ -1,5 +1,6 @@
-CC = g++
-CFLAGS = -std=c++11 -Wall
+CC = gcc
+CXX = g++
+CXXFLAGS = -std=c++11 -Wall
 INCLUDES =
 LFLAGS =
 LIBS = -lSDL2 -lSDL2_ttf -lSDL2_image
@@ -13,10 +14,10 @@ all : $(MAIN)
 	@echo snake_sdl2 compiled and linked
 
 $(MAIN) : $(OBJS)
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
 
-c.o :
-	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
+%.o : %.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $<  -o $@
 
 clean :
 	$(RM) *.o *~ $(MAIN) *db
