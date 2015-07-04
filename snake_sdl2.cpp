@@ -1,3 +1,38 @@
+#include <queue>
+#include <cstdlib>
+#include <ctime>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <ctime>
+#include <cmath>
+
+#ifdef _WIN32
+
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+
+#elif defined __unix__
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+
+#elif defined __APPLE__
+
+#include <SDL2/SDL.h>
+#include <SDL2_image/SDL_image.h>
+#include <SDL2_ttf/SDL_ttf.h>
+
+#endif
+
+#include "snake_sdl2.hpp"
+#include "texture.hpp"
+#include "snake.hpp"
+#include "score.hpp"
+
 int show_menu(void) {
 	int c=1;
 	SDL_Event e;
@@ -31,7 +66,7 @@ int show_menu(void) {
 }
 
 void show_gameover(int a) {
-	srand((unsigned int)(unsigned int)time(NULL));
+	srand((unsigned int)time(NULL));
 	SDL_RenderClear(gRenderer);
 	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
 	gGameOverTexture.render(0, 80);
@@ -51,7 +86,9 @@ int classic_game(void) {
 	Game_Snake S;
 	int d=-1;
 	SDL_Event e;
+	Uint32 ticks;
 	while(1) {
+		ticks=SDL_GetTicks();
 		SDL_RenderClear(gRenderer);
 		SDL_SetRenderDrawColor(gRenderer, r, g, b, 0xFF);
 		while(SDL_WaitEventTimeout(&e, 4)) {
@@ -93,7 +130,9 @@ int classic_game(void) {
 			return S.getscore();
 		}
 		SDL_RenderPresent(gRenderer);
-        //SDL_Delay(4);
+		while(SDL_GetTicks()-ticks<16) {
+			SDL_Delay(1);
+		}
 	}
 }
 
@@ -105,7 +144,9 @@ void fun_snake_game(void) {
 	Snake S;
 	int d=-1;
 	SDL_Event e;
+	Uint32 ticks;
 	while(1) {
+		ticks=SDL_GetTicks();
 		SDL_RenderClear(gRenderer);
 		SDL_SetRenderDrawColor(gRenderer, r, g, b, 0xFF);
 		while(SDL_PollEvent(&e)) {
@@ -137,23 +178,34 @@ void fun_snake_game(void) {
 		}
 		S.movesnake();
 		S.render();
-        if(S.getcoll()) {
-            SDL_Delay(TIMEOUT_LONG);
-            SDL_RenderClear(gRenderer);
-            SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
-            wait();
-            return;
-        }
+    if(S.getcoll()) {
+        SDL_Delay(TIMEOUT_LONG);
+        SDL_RenderClear(gRenderer);
+        SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+        wait();
+        return;
+    }
 		SDL_RenderPresent(gRenderer);
+		while(SDL_GetTicks()-ticks<16) {
+			SDL_Delay(1);
+		}
 	}
 }
 
-
-Point rand_point() {
+Point rand_point(std::deque<Cell>* cells) {
 	Point p;
+  bool flag;
 	srand((unsigned int)time(NULL));
+  do {
+    flag=false;
     p.Y=(rand()%(SCREEN_HEIGHT-DOT_SIZE));
     p.X=(rand()%(SCREEN_WIDTH-DOT_SIZE));
+    for(std::deque<Cell>::iterator it=cells->begin(); it!=cells->end(); it++) {
+      if(p.X==it->p.X && p.Y==it->p.Y) {
+        flag=true;
+      }
+    }
+  }while(flag);
 	return p;
 }
 
@@ -260,6 +312,10 @@ bool init() {
 				int imgFlags = IMG_INIT_PNG;
 				if(!(IMG_Init(imgFlags) & imgFlags)) {
 					std::cout<<"SDL_image could not initialize! SDL_image Error: "<<IMG_GetError()<<std::endl;
+					success=false;
+				}
+				if(TTF_Init()==-1) {
+					std::cout<<"SDL_ttf could not initialize! SDL_ttf Error: "<<TTF_GetError()<<std::endl;
 					success=false;
 				}
 			}

@@ -1,4 +1,37 @@
-#include "snake_header.hpp"
+#include <queue>
+#include <cstdlib>
+#include <ctime>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <ctime>
+#include <cmath>
+
+#ifdef _WIN32
+
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+
+#elif defined __unix__
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+
+#elif defined __APPLE__
+
+#include <SDL2/SDL.h>
+#include <SDL2_image/SDL_image.h>
+#include <SDL2_ttf/SDL_ttf.h>
+
+#endif
+
+#include "snake_sdl2.hpp"
+#include "texture.hpp"
+#include "snake.hpp"
+#include "score.hpp"
 
 int main(void) {
 	Score S;
@@ -6,6 +39,7 @@ int main(void) {
 	srand((unsigned int)time(NULL));
 	if(!init()) {
 		std::cout<<"Failed to initialize!"<<std::endl;
+		exit(0);
 	}
 	S.fileread();
 	if(!gDotTexture.loadFromFile(DOT_FILE)
@@ -27,7 +61,9 @@ int main(void) {
 		switch(ch=show_menu()) {
 			case 1:
 				a=classic_game();
-				if(a>0) S.addscore(a);
+				if(a>0) {
+					S.addscore(a);
+				}
 				break;
 			case 2:
 				fun_snake_game();

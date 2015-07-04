@@ -1,3 +1,6 @@
+#ifndef SNAKE_SDL2_HPP
+#define SNAKE_SDL2_HPP
+
 #define SCREEN_HEIGHT 480
 #define SCREEN_WIDTH 640
 #define DEF_LEN_CLASSIC 5
@@ -24,7 +27,7 @@
 #define TREAT_1 "res/treat1.png"
 #define TREAT_2 "res/treat2.png"
 #define TREAT_3 "res/treat3.png"
-#define FONT_FILE "res/font.TTF"
+#define FONT_FILE "res/font.ttf"
 
 #define UP 0
 #define RIGHT 1
@@ -56,12 +59,14 @@ struct Treat {
 	int type;
 };
 
-SDL_Window* gWindow = NULL;
-SDL_Renderer* gRenderer = NULL;
+extern SDL_Window* gWindow;
+extern SDL_Renderer* gRenderer;
+
+extern TTF_Font* gFont;
 
 int show_menu(void);
 void show_gameover(int);
-Point rand_point();
+Point rand_point(std::deque<Cell>*);
 int rand_score(void);
 int rand_treat(void);
 int getX(int);
@@ -69,6 +74,9 @@ int getY(int);
 int diff(int, int);
 void int2str(int, char*);
 int classic_game(void);
+void fun_snake_game(void);
 void wait(void);
 bool init();
 void close();
+
+#endif
