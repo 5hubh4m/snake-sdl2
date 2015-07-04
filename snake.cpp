@@ -51,7 +51,7 @@ void Snake::movesnake(void) {
       if(itc->p.X==itn->p.X && itc->p.Y==itn->p.Y) {
         itc->dir=itn->dir;
         itn->mark+=1;
-        if(itn->mark==cells.size()) {
+        if((unsigned int)itn->mark==cells.size()) {
           nodes.erase(itn);
         }
         break;
@@ -78,9 +78,6 @@ void Snake::movesnake(void) {
 }
 
 void Snake::render(void) {
-  int Y, X;
-  Y=cells.front().p.Y;
-  X=cells.front().p.X;
   for(std::deque<Cell>::iterator it=cells.begin(); it!=cells.end(); ++it){
     if(it==cells.begin()) {
       gHeadTexture.render(it->p.X-(DOT_SIZE/2), it->p.Y-(DOT_SIZE/2));
@@ -139,7 +136,7 @@ void Game_Snake::movesnake(void) {
       if(itc->p.X==itn->p.X && itc->p.Y==itn->p.Y) {
         itc->dir=itn->dir;
         itn->mark+=1;
-        if(itn->mark==cells.size()) {
+        if((unsigned int)itn->mark==cells.size()) {
           nodes.erase(itn);
         }
         break;
@@ -190,9 +187,6 @@ void Game_Snake::movesnake(void) {
 }
 
 void Game_Snake::render(void) {
-  int Y, X;
-  Y=cells.front().p.Y;
-  X=cells.front().p.X;
   for(std::deque<Cell>::iterator it=cells.begin(); it!=cells.end(); ++it){
     if(it==cells.begin()) {
       gHeadTexture.render(it->p.X-(DOT_SIZE/2), it->p.Y-(DOT_SIZE/2));
