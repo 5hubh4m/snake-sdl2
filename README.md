@@ -12,6 +12,7 @@ This is a Snake Game from the period of Black and White Screen Nokia.
 * Uses SDL2 to display 2D GUI and Game.
 * Compile with make.
 * Run with make run.
+* Clean with make clean.
 
 **Author**
 Shubham Chaudhary
