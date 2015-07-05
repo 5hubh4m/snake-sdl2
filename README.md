@@ -15,6 +15,7 @@ This is a Snake Game from the period of Black and White Screen Nokia.
 * Clean with make clean.
 
 **Author**
+
 Shubham Chaudhary
 
 Cheers!
